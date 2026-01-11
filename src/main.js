@@ -23,7 +23,6 @@ import { BlockEditor } from './components/BlockEditor';
 
 // ... (previous imports)
 
-import { BlockEditor } from './components/BlockEditor';
 import { DatabaseView } from './components/DatabaseView'; // Import
 
 // ...

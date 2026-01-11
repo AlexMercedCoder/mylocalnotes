@@ -2,6 +2,16 @@ import EditorJS from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import List from '@editorjs/list';
 import Checklist from '@editorjs/checklist';
+import Quote from '@editorjs/quote';
+import Code from '@editorjs/code';
+import Delimiter from '@editorjs/delimiter';
+import Embed from '@editorjs/embed';
+import Table from '@editorjs/table';
+import Warning from '@editorjs/warning';
+import Marker from '@editorjs/marker';
+import InlineCode from '@editorjs/inline-code';
+import LinkTool from '@editorjs/link';
+import Raw from '@editorjs/raw';
 import { StorageService } from '../services/storage';
 
 export class BlockEditor {
@@ -34,9 +44,39 @@ export class BlockEditor {
       data: editorData,
       placeholder: 'Type forward slash / to see commands',
       tools: {
-        header: Header,
-        list: List,
-        checklist: Checklist,
+        header: {
+            class: Header,
+            inlineToolbar: true,
+            config: { placeholder: 'Heading' },
+        },
+        list: {
+            class: List,
+            inlineToolbar: true,
+            config: { defaultStyle: 'unordered' }, 
+        },
+        checklist: {
+            class: Checklist,
+            inlineToolbar: true,
+        },
+        quote: {
+            class: Quote,
+            inlineToolbar: true,
+            config: { quotePlaceholder: 'Enter a quote', captionPlaceholder: 'Quote caption' },
+        },
+        code: Code,
+        delimiter: Delimiter,
+        embed: Embed,
+        table: {
+            class: Table,
+            inlineToolbar: true,
+        },
+        warning: Warning,
+        raw: Raw, // HTML
+        
+        // Inline Tools
+        marker: Marker,
+        inlineCode: InlineCode,
+        linkTool: LinkTool,
       },
       onChange: () => {
         this.triggerAutoSave();
