@@ -23,6 +23,11 @@ import { BlockEditor } from './components/BlockEditor';
 
 // ... (previous imports)
 
+import { BlockEditor } from './components/BlockEditor';
+import { DatabaseView } from './components/DatabaseView'; // Import
+
+// ...
+
 // Setup Router
 const router = new Router({
   '/': () => {
@@ -30,36 +35,60 @@ const router = new Router({
       <div class="empty-state">
         <h1>Welcome Back</h1>
         <p>Select a page from the sidebar to start writing.</p>
+        <button id="create-db-btn">Create New Database</button>
       </div>`;
+      
+      // Hook up Create DB Button
+      setTimeout(() => {
+        const btn = document.getElementById('create-db-btn');
+        if(btn) btn.onclick = async () => {
+             const title = prompt("Database Name:");
+             if(!title) return;
+             // 1. Create Schema
+             const dbDoc = await StorageService.saveDatabase({ title, properties: [] });
+             // 2. Create Page Node (for Sidebar)
+             await StorageService.createPage({ 
+                title, 
+                parent_id: "ROOT", // or current page 
+                databaseId: dbDoc.id 
+             });
+             sidebar.refresh();
+        };
+      }, 0);
   },
   '/page/:id': async ({ id }) => {
     // Clear Area
     editorArea.innerHTML = '';
     
-    // Header for Title (Outside EditorJS for now, or could be first block)
     const page = (await StorageService.getPages(null)).find(p => p.id === id) || 
                  (await StorageService.getPages("ROOT")).find(p => p.id === id); 
     
-    if (page) {
+    if (!page) {
+        editorArea.innerHTML = 'Page not found';
+        return;
+    }
+
+    if (page.databaseId) {
+        // Render Database View
+        const dbView = new DatabaseView(page.databaseId);
+        editorArea.appendChild(dbView.element);
+        await dbView.mount();
+    } else {
+        // Render Standard Page
         const titleEl = document.createElement('h1');
         titleEl.contentEditable = true;
         titleEl.className = 'page-title';
         titleEl.innerText = page.title;
         titleEl.onblur = async () => {
-            // Save Title Update
-            // We need a StorageService.updatePage(id, { title }) method or similar
-            // For now, simpler:
-             // StorageService.createPage updates if ID exists.
              await StorageService.createPage({ ...page, title: titleEl.innerText });
-             sidebar.refresh(); // Update sidebar title
+             sidebar.refresh(); 
         };
         editorArea.appendChild(titleEl);
+        
+        const editor = new BlockEditor(id);
+        editorArea.appendChild(editor.element);
+        await editor.mount();
     }
-    
-    // Mount Editor
-    const editor = new BlockEditor(id);
-    editorArea.appendChild(editor.element);
-    await editor.mount(); // Initialize EditorJS
   }
 });
 

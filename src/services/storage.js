@@ -143,5 +143,50 @@ export const StorageService = {
   async deleteBlock(id) {
     if (!currentWorkspaceId) throw new Error("Not authenticated");
     await db.blocks.delete(id);
+  },
+
+  // --- Database Features ---
+
+  /**
+   * Create or Update a Database definition.
+   * @param {Object} dbObj { id?, title, properties }
+   */
+  async saveDatabase({ id, title, properties }) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    const dbId = id || uuidv4();
+    const doc = {
+      id: dbId,
+      workspaceId: currentWorkspaceId,
+      title,
+      properties, // Schema definition
+      updated_at: Date.now()
+    };
+    if (!id) doc.created_at = Date.now();
+    await db.databases.put(doc);
+    return doc;
+  },
+
+  async getDatabase(id) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    return await db.databases.get(id);
+  },
+
+  async getAllDatabases() {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    return await db.databases.where('workspaceId').equals(currentWorkspaceId).toArray();
+  },
+
+  /**
+   * Update the structured properties of a Page (Row).
+   */
+  async updatePageProperties(pageId, properties) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    
+    // We need to fetch, merge, and put because we might overwrite other fields if we aren't careful, 
+    // although db.pages.update() is better for this.
+    await db.pages.update(pageId, {
+      properties, 
+      updated_at: Date.now()
+    });
   }
 };
