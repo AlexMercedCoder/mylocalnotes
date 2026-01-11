@@ -84,6 +84,19 @@ export const StorageService = {
   },
 
   /**
+   * Get a single page by ID.
+   */
+  async getPage(id) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    const page = await db.pages.get(id);
+    // Security check: ensure page belongs to current workspace
+    if (page && page.workspaceId === currentWorkspaceId) {
+        return page;
+    }
+    return null;
+  },
+
+  /**
    * Save a block (Create or Update). Handles encryption.
    */
   async saveBlock(block) {

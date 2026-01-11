@@ -60,8 +60,7 @@ const router = new Router({
     // Clear Area
     editorArea.innerHTML = '';
     
-    const page = (await StorageService.getPages(null)).find(p => p.id === id) || 
-                 (await StorageService.getPages("ROOT")).find(p => p.id === id); 
+    const page = await StorageService.getPage(id);
     
     if (!page) {
         editorArea.innerHTML = 'Page not found';

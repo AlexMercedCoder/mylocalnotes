@@ -1,10 +1,15 @@
 import { StorageService } from '../services/storage';
 import { appStore } from '../store';
 import { v4 as uuidv4 } from 'uuid';
+import { ExportService } from '../services/export';
+import { SearchModal } from './SearchModal';
 
 export class Sidebar {
   constructor(router) {
     this.router = router;
+    this.searchModal = new SearchModal(router);
+    document.body.appendChild(this.searchModal.element); // Mount global modal
+    
     this.element = document.createElement('nav');
     this.element.id = 'sidebar-content';
     this.currentWorkspace = null;
@@ -28,17 +33,28 @@ export class Sidebar {
       const rootPages = await StorageService.getPages("ROOT");
       this.element.innerHTML = ''; // clear loading
       
-      // Header / Tools
       const header = document.createElement('div');
       header.className = 'sidebar-header';
       header.innerHTML = `<h3>My Notes</h3>`;
       
+      const actions = document.createElement('div');
+      actions.style.display = 'flex';
+      
+      const searchBtn = document.createElement('button');
+      searchBtn.className = 'btn-icon-sm';
+      searchBtn.innerHTML = '<span class="material-symbols-outlined">search</span>';
+      searchBtn.title = "Search (Cmd+K)";
+      searchBtn.onclick = () => this.searchModal.open();
+      actions.appendChild(searchBtn);
+
       const addBtn = document.createElement('button');
       addBtn.className = 'btn-icon-sm';
       addBtn.innerHTML = '<span class="material-symbols-outlined">add</span>';
       addBtn.title = "New Page";
       addBtn.onclick = () => this.createPage("ROOT");
-      header.appendChild(addBtn);
+      actions.appendChild(addBtn);
+
+      header.appendChild(actions);
       
       this.element.appendChild(header);
 
@@ -99,6 +115,23 @@ export class Sidebar {
       li.classList.add('expanded'); // Auto expand
     };
     row.appendChild(addSub);
+    
+    // Export Icon
+    const exportBtn = document.createElement('span');
+    exportBtn.className = 'action-icon material-symbols-outlined';
+    exportBtn.textContent = 'download';
+    exportBtn.title = "Export Markdown";
+    exportBtn.onclick = async (e) => {
+      e.stopPropagation();
+      try {
+        const md = await ExportService.generateMarkdown(page.id);
+        ExportService.downloadFile(`${page.title || 'untitled'}.md`, md);
+      } catch(err) {
+        alert("Export failed");
+        console.error(err);
+      }
+    };
+    row.appendChild(exportBtn);
 
     li.appendChild(row);
 
