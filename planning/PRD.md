@@ -41,7 +41,17 @@ This document outlines the requirements for a client-side, offline-first product
 *   **Markdown Export**: Convert a single page (and its children) to a `.md` file. Database rows become list items or tables.
 *   **PDF Export**: Render the current page to a styled PDF designed for printing.
 
-## 4. UI/UX & Design System
+## 4. Security & Multi-User
+*   **Authentication (Profile Switching)**:
+    *   **Login Gates**: App launches to a Login Screen (Username/Password).
+    *   **Workspaces**: Data is partitioned by "User". User A cannot see User B's notes.
+    *   **Implementation**: `workspaceId` is a SHA-256 hash of the Username. This allows "logging in" from any device to access that "profile" (assuming data was synced or just separating local users). *Note: Since this is local-only, this effectively just separates "Profiles" on the same machine.*
+*   **Encryption**:
+    *   **Sensitive Mode**: Users can toggle a "Sensitive" flag on specific blocks or pages.
+    *   **Encryption**: Sensitive content is encrypted using AES-GCM with a key derived from the Password.
+    *   **DevTools Protection**: Even if an attacker inspects IndexedDB, the content is gibberish without the session key.
+
+## 5. UI/UX & Design System
 *   **Aesthetic**: Google Material Design 3 (Material You).
 *   **Theming**:
     *   **Primary Color Picker**: User selects a HEX code.

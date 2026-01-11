@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <title>My Local Notes</title>
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+      <div class="login-card">
+        <h1>My Local Notes</h1>
+        <p>Your secure, offline workspace.</p>
+        <form id="login-form">
+          <div class="input-group">
+            <label for="username">Username / Profile</label>
+            <input type="text" id="username" placeholder="e.g. personal" required autocomplete="username">
+          </div>
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-primary">
+            <span class="material-symbols-outlined">lock_open</span>
+            Unlock Workspace
+          </button>
+        </form>
+        <p class="crypto-note">
+          <span class="material-symbols-outlined">encrypted</span>
+          Encryption keys are derived from your password. If you lose it, your data is lost forever.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="screen hidden">
+      <nav id="sidebar">
+        <!-- Sidebar Content -->
+      </nav>
+      <main id="editor-area">
+        <h1>Loading Workspace...</h1>
+      </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
