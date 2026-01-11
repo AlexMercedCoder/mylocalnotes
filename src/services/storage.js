@@ -86,6 +86,10 @@ export const StorageService = {
   /**
    * Get a single page by ID.
    */
+  async getDatabasePages(databaseId) {
+     return await db.pages.where('databaseId').equals(databaseId).toArray();
+  },
+
   async getPage(id) {
     if (!currentWorkspaceId) throw new Error("Not authenticated");
     const page = await db.pages.get(id);
@@ -153,6 +157,30 @@ export const StorageService = {
   /**
    * Delete a block by ID.
    */
+  async getPagePath(pageId) {
+    const context = this.getContext();
+    if (!context) return [];
+    
+    const path = [];
+    let currentId = pageId;
+    
+    // Prevent infinite loops with max depth
+    let depth = 0;
+    while (currentId && currentId !== 'ROOT' && depth < 20) {
+        const page = await db.pages.get(currentId);
+        if (!page) break;
+        
+        // Security check
+        if (page.workspaceId !== context.workspaceId) break;
+        
+        path.unshift({ id: page.id, title: page.title });
+        currentId = page.parent_id;
+        depth++;
+    }
+    
+    return path;
+  },
+
   async deleteBlock(id) {
     if (!currentWorkspaceId) throw new Error("Not authenticated");
     await db.blocks.delete(id);

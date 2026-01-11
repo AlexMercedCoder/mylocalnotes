@@ -6,11 +6,15 @@ import { Sidebar } from './components/Sidebar';
 import { ThemeToggle } from './components/ThemeToggle';
 import { DocsService } from './services/docs';
 import { ShortcutsModal } from './components/ShortcutsModal';
+import { Breadcrumbs } from './components/Breadcrumbs';
+import { PageHeader } from './components/PageHeader';
+import { TrashModal } from './components/TrashModal';
 
 // Components
 const sidebar = new Sidebar();
 const themeToggle = ThemeToggle();
 const shortcutsModal = new ShortcutsModal();
+const breadcrumbs = new Breadcrumbs();
 
 // DOM Elements
 const loginScreen = document.getElementById('login-screen');

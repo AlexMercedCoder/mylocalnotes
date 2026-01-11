@@ -251,6 +251,25 @@ body {
         list-style: none;
       }
     }
+    .page-list {
+      li {
+        padding: 0.5rem;
+        background: var(--color-surface);
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--color-border);
+        list-style: none;
+      }
+    }
+  }
+  
+  #editor-area.full-width .ce-block__content {
+      max-width: 100% !important;
+      padding: 0 2rem;
+  }
+  
+  #editor-area.small-text {
+      font-size: 0.85rem;
   }
 }
 
@@ -539,4 +558,40 @@ body {
         }
     }
   }
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        a {
+            color: var(--color-text);
+            text-decoration: none;
+            padding: 2px 4px;
+            border-radius: 4px;
+            
+            &:hover { background: var(--color-hover); }
+        }
+        
+        &.active {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+    }
+    
+    .breadcrumb-separator {
+        color: #ccc;
+        font-size: 0.8rem;
+    }
 }
