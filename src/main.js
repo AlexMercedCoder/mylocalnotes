@@ -4,10 +4,13 @@ import { StorageService } from './services/storage';
 import { Router } from './router';
 import { Sidebar } from './components/Sidebar';
 import { ThemeToggle } from './components/ThemeToggle';
+import { DocsService } from './services/docs';
+import { ShortcutsModal } from './components/ShortcutsModal';
 
 // Components
 const sidebar = new Sidebar();
 const themeToggle = ThemeToggle();
+const shortcutsModal = new ShortcutsModal();
 
 // DOM Elements
 const loginScreen = document.getElementById('login-screen');
@@ -16,8 +19,9 @@ const loginForm = document.getElementById('login-form');
 const editorArea = document.getElementById('editor-area');
 const sidebarContainer = document.getElementById('sidebar');
 
-// Add Theme Toggle
+// Add Theme Toggle & Shortcuts
 document.body.appendChild(themeToggle);
+document.body.appendChild(shortcutsModal.element);
 
 import { BlockEditor } from './components/BlockEditor';
 
@@ -104,6 +108,9 @@ appStore.subscribe(async state => {
     // Mount Sidebar
     sidebarContainer.innerHTML = '';
     sidebarContainer.appendChild(sidebar.element);
+    
+    // Seed Help Docs
+    await DocsService.init();
     sidebar.refresh();
 
     // Start Router

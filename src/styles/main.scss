@@ -397,3 +397,146 @@ body {
     }
   }
 }
+
+/* EditorJS Plugins */
+.ce-block__content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ce-header {
+  font-weight: 700;
+  margin-bottom: 0.5rem !important;
+}
+
+.cdx-block {
+  padding: 0.2rem 0; /* Tighter spacing */
+}
+
+/* Quote */
+.cdx-quote {
+    background: var(--color-hover);
+    border-left: 4px solid var(--color-primary);
+    padding: 1rem;
+    font-style: italic;
+    border-radius: 4px;
+}
+.cdx-quote__caption { color: #888; margin-top: 0.5rem; }
+
+/* Table */
+.tc-table {
+    border: 1px solid var(--color-border);
+}
+.tc-row:after { background: var(--color-border); } /* row divider */
+
+/* Code */
+.ce-code__textarea {
+    background: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    font-family: monospace;
+    border-radius: 4px;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+}
+
+/* Warning */
+.cdx-warning {
+    background: rgba(255, 152, 0, 0.1);
+    border: 1px solid rgba(255, 152, 0, 0.5);
+    border-radius: 6px; 
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+.cdx-warning:before {
+    content: "⚠️";
+    font-size: 1.5rem;
+}
+
+/* Inline Code */
+.inline-code {
+    background: var(--color-hover);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+    color: var(--color-primary);
+}
+
+/* Marker */
+.cdx-marker {
+    background: rgba(255, 235, 59, 0.4); 
+    padding: 0 2px;
+}
+[data-theme="dark"] .cdx-marker {
+    background: rgba(255, 235, 59, 0.2);
+    color: #fff;
+}
+
+/* Shortcuts Modal */
+.shortcuts-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  
+  &.hidden { display: none; }
+  
+  .shortcuts-modal {
+    background: var(--color-surface);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 600px;
+    width: 90%;
+    
+    h2 { margin-top: 0; border-bottom: 2px solid var(--color-border); padding-bottom: 0.5rem; }
+    
+    .shortcuts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .shortcut-group h3 {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 1rem;
+    }
+    
+    .shortcut-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        
+        span:first-child {
+            background: var(--color-hover);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+    }
+    
+    .modal-footer {
+        text-align: right;
+        margin-top: 1rem;
+        
+        button {
+            padding: 0.5rem 1.5rem;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    }
+  }
+}
