@@ -27,7 +27,17 @@ const sidebarContainer = document.getElementById('sidebar');
 document.body.appendChild(themeToggle);
 document.body.appendChild(shortcutsModal.element);
 
+// Trash Listener
+window.addEventListener('open-trash', () => {
+    const trash = new TrashModal(() => {
+        document.body.removeChild(trash.element);
+        sidebar.refresh();
+    });
+    document.body.appendChild(trash.element);
+});
+
 import { BlockEditor } from './components/BlockEditor';
+import { TemplatesService } from './services/templates'; // Import Templates Logic
 
 // ... (previous imports)
 
@@ -81,19 +91,34 @@ const router = new Router({
         await dbView.mount();
     } else {
         // Render Standard Page
-        const titleEl = document.createElement('h1');
-        titleEl.contentEditable = true;
-        titleEl.className = 'page-title';
-        titleEl.innerText = page.title;
-        titleEl.onblur = async () => {
-             await StorageService.createPage({ ...page, title: titleEl.innerText });
+        sidebar.setActive(id); // Highlight in Sidebar
+
+        // 1. Breadcrumbs
+        breadcrumbs.update(id);
+        editorArea.appendChild(breadcrumbs.element);
+
+        // 2. Page Header
+        const header = new PageHeader(page, async (updates) => {
+             // Optimistic Update
+             Object.assign(page, updates);
+             await StorageService.createPage(page);
              sidebar.refresh(); 
-        };
-        editorArea.appendChild(titleEl);
+        });
         
+        // Listen for Template Event
+        header.element.addEventListener('apply-template', async (e) => {
+             await TemplatesService.applyTemplate(page.id, e.detail.templateId);
+             // Reload
+             router.navigate(window.location.hash.slice(1)); 
+             window.dispatchEvent(new Event('hashchange')); // Force reload
+        });
+
+        editorArea.appendChild(header.element);
+        
+        // 3. Editor
         const editor = new BlockEditor(id);
         editorArea.appendChild(editor.element);
-        await editor.mount();
+        await editor.mount(); // Wait for editor to load data
     }
   }
 });

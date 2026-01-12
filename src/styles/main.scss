@@ -233,6 +233,15 @@ body {
         padding: 2px;
         &:hover { color: var(--color-primary); }
       }
+      
+      &.active {
+          background-color: var(--color-primary);
+          color: white;
+          
+          .toggle-icon, .action-icon { color: rgba(255,255,255, 0.8); }
+          .toggle-icon:hover, .action-icon:hover { color: white; }
+          .page-link { font-weight: 500; }
+      }
     }
   }
 
@@ -263,10 +272,7 @@ body {
     }
   }
   
-  #editor-area.full-width .ce-block__content {
-      max-width: 100% !important;
-      padding: 0 2rem;
-  }
+  /* Full Width option removed per user design request */
   
   #editor-area.small-text {
       font-size: 0.85rem;
@@ -418,9 +424,17 @@ body {
 }
 
 /* EditorJS Plugins */
+/* CLEANUP: Remove block-level padding */
 .ce-block__content {
   max-width: 800px;
   margin: 0 auto;
+}
+
+/* TOOL COLUMN STRATEGY */
+/* 1. Force a "Safety Gutter" on the entire editor content area */
+.codex-editor__redactor {
+    padding-left: 60px !important; /* Push ALL text 60px right */
+    padding-right: 0 !important;
 }
 
 .ce-header {
@@ -428,8 +442,63 @@ body {
   margin-bottom: 0.5rem !important;
 }
 
+/* cdx-block spacing */
 .cdx-block {
-  padding: 0.2rem 0; /* Tighter spacing */
+    padding: 0.1em 0; 
+}
+
+/* Fix EditorJS Toolbar "Plus" outline */
+.ce-toolbar__plus, .ce-toolbox__button {
+    color: var(--color-text);
+    border-radius: 50%; /* Circular */
+    width: 28px; /* Standard Size */
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+    margin: 0;
+}
+
+.ce-toolbar__plus {
+    background-color: var(--color-hover); 
+    margin-top: 0 !important;
+    transform: none !important;
+}
+
+.ce-toolbar__plus:hover, .ce-toolbox__button:hover {
+    background-color: var(--color-primary);
+    color: white !important; 
+}
+
+/* Position adjustment: SHIFT INTO GUTTER */
+/* 
+   The toolbar tries to align with the block (which is now at x=60px).
+   We force the buttons LEFT by 45px to sit in the white space gutter.
+*/
+.ce-toolbar__actions {
+    margin-right: 0 !important;
+    transform: translateX(-45px) !important; 
+    
+    display: flex;
+    align-items: center; 
+    height: 28px; 
+    padding: 0;   
+    justify-content: center;
+    opacity: 0.6; /* Semi-opaque until used */
+}
+.ce-toolbar__actions:hover { opacity: 1; }
+
+/* 
+   Reset the transform logic, rely on padding-match 
+*/
+.ce-toolbar__plus {
+   /* Nudge down to align with text baseline. 
+      Using margin-top is often more reliable than transform in some flex contexts.
+      Adding !important to ensure it overrides Editor.js default styles.
+   */
+   margin-top: 4px !important; 
+   transform: none;
 }
 
 /* Quote */

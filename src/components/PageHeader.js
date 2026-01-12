@@ -28,7 +28,6 @@ export class PageHeader {
             <span class="btn-view-opts" style="cursor: pointer;">👁️ View</span>
         </div>
         <div class="view-menu hidden" style="position: absolute; right: 0; background: var(--color-surface); border: 1px solid var(--color-border); padding: 1rem; z-index: 10;">
-            <label style="display: block; margin-bottom: 0.5rem;"><input type="checkbox" id="toggle-full-width"> Full Width</label>
             <label style="display: block;"><input type="checkbox" id="toggle-small-text"> Small Text</label>
         </div>
     `;
@@ -55,9 +54,6 @@ export class PageHeader {
 
     // Toggles (Apply to Editor Area - passed in? or find global?)
     // Ideally Main.js handles this, but we can emit events.
-    this.element.querySelector('#toggle-full-width').addEventListener('change', (e) => {
-        document.getElementById('editor-area').classList.toggle('full-width', e.target.checked);
-    });
     this.element.querySelector('#toggle-small-text').addEventListener('change', (e) => {
          document.getElementById('editor-area').classList.toggle('small-text', e.target.checked);
     });

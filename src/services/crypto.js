@@ -8,9 +8,10 @@ export const CryptoService = {
   async deriveKeys(username, password) {
     const encoder = new TextEncoder();
 
-    // 1. Derive Workspace ID (SHA-256 of username)
-    // This allows partitioning data by user.
-    const wsData = encoder.encode(username.trim().toLowerCase() + "_WORKSPACE_SALT_v1");
+    // 1. Derive Workspace ID (SHA-256 of username + password)
+    // This strictly isolates workspaces by credentials. 
+    // Changing your password effectively creates a new empty workspace (brain-wallet style).
+    const wsData = encoder.encode(username.trim().toLowerCase() + password + "_WORKSPACE_SALT_v2");
     const wsHash = await crypto.subtle.digest("SHA-256", wsData);
     const workspaceId = Array.from(new Uint8Array(wsHash))
       .map(b => b.toString(16).padStart(2, "0"))

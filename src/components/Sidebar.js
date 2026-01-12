@@ -26,6 +26,19 @@ export class Sidebar {
     // For now, we'll manually call refresh after actions, or implement an event bus later.
   }
 
+  setActive(pageId) {
+     // Remove active class from all
+     const allRows = this.element.querySelectorAll('.page-row');
+     allRows.forEach(el => el.classList.remove('active'));
+
+     if (!pageId) return;
+
+     // Add to specific page
+     // We need to find the LI with dataset.id, then its child .page-row
+     const item = this.element.querySelector(`.page-item[data-id="${pageId}"] > .page-row`);
+     if (item) item.classList.add('active');
+  }
+
   async refresh() {
     this.element.innerHTML = '<div class="loading">Loading...</div>';
     
@@ -56,7 +69,18 @@ export class Sidebar {
 
       header.appendChild(actions);
       
+      header.appendChild(actions);
       this.element.appendChild(header);
+
+      // Trash Button
+      const trashBtn = document.createElement('div');
+      trashBtn.style.padding = '0.5rem 1rem';
+      trashBtn.style.cursor = 'pointer';
+      trashBtn.style.fontSize = '0.9rem';
+      trashBtn.style.color = '#888';
+      trashBtn.innerHTML = `<span class="material-symbols-outlined" style="vertical-align: middle; font-size: 1.1rem; margin-right: 5px;">delete</span> Trash`;
+      trashBtn.onclick = () => window.dispatchEvent(new CustomEvent('open-trash'));
+      this.element.appendChild(trashBtn);
 
       // Page Tree
       const tree = document.createElement('ul');
@@ -132,6 +156,21 @@ export class Sidebar {
       }
     };
     row.appendChild(exportBtn);
+
+    // Delete Icon
+    const deleteBtn = document.createElement('span');
+    deleteBtn.className = 'action-icon material-symbols-outlined';
+    deleteBtn.textContent = 'delete';
+    deleteBtn.title = "Move to Trash";
+    deleteBtn.style.fontSize = '1.1rem'; // slightly smaller?
+    deleteBtn.onclick = async (e) => {
+      e.stopPropagation();
+      if (confirm(`Move "${page.title}" to Trash?`)) {
+          await StorageService.deletePage(page.id);
+          this.refresh();
+      }
+    };
+    row.appendChild(deleteBtn);
 
     li.appendChild(row);
 

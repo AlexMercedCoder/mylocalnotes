@@ -77,10 +77,21 @@ export const StorageService = {
   async getPages(parentId = "ROOT") {
     if (!currentWorkspaceId) throw new Error("Not authenticated");
     // IndexedDB/Dexie handles null in index queries
-    return await db.pages
+    const pages = await db.pages
       .where('[workspaceId+parent_id]')
       .equals([currentWorkspaceId, parentId])
       .toArray();
+    
+    // Filter out deleted
+    return pages.filter(p => !p.deleted_at);
+  },
+
+  async getTrash() {
+      if (!currentWorkspaceId) throw new Error("Not authenticated");
+      return await db.pages
+        .where('workspaceId').equals(currentWorkspaceId)
+        .filter(p => !!p.deleted_at)
+        .toArray();
   },
 
   /**
@@ -229,5 +240,23 @@ export const StorageService = {
       properties, 
       updated_at: Date.now()
     });
+  },
+
+  async deletePage(id) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    // Soft Delete
+    await db.pages.update(id, { deleted_at: Date.now() });
+  },
+
+  async restorePage(id) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    await db.pages.update(id, { deleted_at: undefined });
+  },
+
+  async permanentDeletePage(id) {
+    if (!currentWorkspaceId) throw new Error("Not authenticated");
+    await db.pages.delete(id);
+    // Also delete blocks?
+    // db.blocks.where('parent_id').equals(id).delete();
   }
 };
