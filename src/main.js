@@ -23,6 +23,25 @@ const loginForm = document.getElementById('login-form');
 const editorArea = document.getElementById('editor-area');
 const sidebarContainer = document.getElementById('sidebar');
 
+// Mobile Toggle Logic
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+function toggleSidebar() {
+    appScreen.classList.toggle('sidebar-open');
+}
+
+function closeSidebar() {
+    appScreen.classList.remove('sidebar-open');
+}
+
+if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+// Auto-close sidebar on router navigation (mobile only check done solely via CSS visibility)
+window.addEventListener('hashchange', closeSidebar);
+
+
 // Add Theme Toggle & Shortcuts
 document.body.appendChild(themeToggle);
 document.body.appendChild(shortcutsModal.element);
